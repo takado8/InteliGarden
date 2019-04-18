@@ -1,1 +1,2 @@
 # InteliGarden
+Automatic plant watering.
