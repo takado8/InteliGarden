@@ -5,7 +5,6 @@ from enum import Enum
 class Pump:
     gp = None
     pin = None
-    is_working = False
 
     WORKING = 1
     NOT_WORKING = 0
@@ -27,19 +26,20 @@ class Pump:
         print('turning on')
         # if self.pin is not None and not self.is_working:
         self.gp.output(self.pin, 0)
-        self.is_working = True
 
     def turn_off(self):
         print('turning off')
         # if self.pin is not None:# and self.is_working:
         self.gp.output(self.pin, 1)
-        self.is_working = False
 
     def turn_on_for_time(self, seconds):
         self.turn_on()
         time.sleep(seconds)
         self.turn_off()
 
-    # class state(Enum):
-    #     WORKING = 1
-    #     NOT_WORKING = 0
+    def pump_ml(self, mililiters):
+        # 100ml pumps for 33 sec
+        time_needed = (mililiters * 33) / 100
+        self.turn_on()
+        time.sleep(time_needed)
+        self.turn_off()
