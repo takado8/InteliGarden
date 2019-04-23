@@ -14,7 +14,7 @@ class WaterLevel:
         self.pin_out = pin_out
         self.pin_in = pin_in
         gp.setup(pin_out, gp.OUT, initial=gp.HIGH)
-        gp.setup(pin_in, gp.IN)
+        gp.setup(pin_in, gp.IN, pull_up_down=gp.PUD_DOWN)
     
     def state(self):
         if self.gp.input(self.pin_in) == 1:

@@ -1,7 +1,7 @@
 import RPi.GPIO as gp
 from pump import Pump
 from moisture_sensors import MSensor
-
+from water_level import WaterLevel
 
 class Control:
     # pumps
@@ -21,8 +21,8 @@ class Control:
     M_SENSOR_2_pin = None
     M_SENSORS_RELAY_pin = 12
     RAIN_SENSOR_pin = None
-    WATER_LEVEL_SENSOR_pin_out = None
-    WATER_LEVEL_SENSOR_pin_in = None
+    WATER_LEVEL_SENSOR_pin_out = 1
+    WATER_LEVEL_SENSOR_pin_in = 7
 
     def __init__(self):
         # settings
@@ -33,6 +33,8 @@ class Control:
         self.PUMP_2 = Pump(gp, self.PUMP_2_pin)
         # moisture sensors
         self.M_SENSOR_1 = MSensor(gp, self.M_SENSOR_1_pin, self.M_SENSORS_RELAY_pin)
+        # water level sensor
+        self.WATER_LEVEL_SENSOR = WaterLevel(gp, self.WATER_LEVEL_SENSOR_pin_out, self.WATER_LEVEL_SENSOR_pin_in)
 
 
     def __del__(self):

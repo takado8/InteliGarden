@@ -12,7 +12,7 @@ class MSensor:
         self.gp = gp
         self.sensor_pin = sensor_pin
         self.relay_pin = relay_pin
-        gp.setup(sensor_pin, gp.IN)
+        gp.setup(sensor_pin, gp.IN, pull_up_down=gp.PUD_UP)
         gp.setup(relay_pin, gp.OUT, initial=gp.HIGH)
 
     def state(self):
