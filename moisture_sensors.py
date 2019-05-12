@@ -22,6 +22,7 @@ class MSensor:
         state = self.gp.input(self.sensor_pin)
         time.sleep(1)
         self.gp.output(self.relay_pin, self.gp.HIGH)
+        
         # 0 - over the threshold
         # 1 - below the threshold
         if state == 0:

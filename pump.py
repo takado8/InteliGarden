@@ -43,3 +43,4 @@ class Pump:
         self.turn_on()
         time.sleep(time_needed)
         self.turn_off()
+        return True

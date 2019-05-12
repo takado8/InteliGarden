@@ -1,4 +1,4 @@
-
+import time
 
 class WaterLevel:
     # GPIO object and pins numbers
@@ -13,11 +13,17 @@ class WaterLevel:
         self.gp = gp
         self.pin_out = pin_out
         self.pin_in = pin_in
-        gp.setup(pin_out, gp.OUT, initial=gp.HIGH)
+        gp.setup(pin_out, gp.OUT, initial=gp.LOW)
         gp.setup(pin_in, gp.IN, pull_up_down=gp.PUD_DOWN)
     
     def state(self):
-        if self.gp.input(self.pin_in) == 1:
+        self.gp.output(self.pin_out, gp.HIGH)
+        time.sleep(0.2)
+        input_state = self.gp.input(self.pin_in)
+        time.sleep(0.1)
+        self.gp.output(self.pin_out, gp.LOW)
+
+        if input_state == 1:
             return self.HIGH
         else:
             return self.LOW
