@@ -11,4 +11,5 @@ Solution consists of following hardware parts:
 5. Two digital soil moisture sensors, each for one watering group. Sensor tells if soil moisture is below, or over the threshold.
 6. Rain sensor - this solution will work outside and we don't want water plants if there was rain recently. Aplication will check moisture 
   level, and reschedule watering if neeeded.
-7. Three power relays - one for each pump and one for both moisture sensors. (For default, moisture sensors are always powered when connected to power supply. Sensor has two 
+7. Three power relays - one for each pump and one for both moisture sensors.
+8. Wiring, piping, power supply.
