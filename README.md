@@ -1,7 +1,6 @@
 # InteliGarden
 
-Automatic and highly autonomous plant watering machine, based on Rasberry Pi Zero, with user friedly aplication on android, iOS and windows 10, that allows to easly manage system. It is only required from a user to set some watering plan at first, it is limited to setting 2 values for each group - first is 'Watering time interval' - number of days between watering cycles, and second is for water volume that will be measured on watering event.
-After that, the only thing we have to remember about, is to keep main water tank filled. When the water level reaches the reserve, application sends reminder.
+Autonomous plant watering machine, based on Rasberry Pi Zero, with aplication for android, iOS and windows 10, wchich allows to easly manage InteliGarden. 
 
 Solution consists of following parts:
 
@@ -29,10 +28,11 @@ List of challenges and problems I've met, with solutions I've provided.
    
    solutions considered:
    
-    1. Determine more values of the time needed to pump the intended volume of liquid, but at given high.
-        well, that is just ugly. It should work somehow, but it requires to determine all those values experimentally, by pouring               water and counting flow time for given volume. It may be acceptable with small tanks, and for one project only, cause every             change in project that affects water flow, and every new machine, would require setting all of those values again.
+    1. Determine more values of the time needed to pump the intended volume of fluid, but at given high.
+        It requires to determine all values experimentally, by pouring water and counting flow time for given volume. It may be                 acceptable with small tanks, and for one project, because every change in project that affects water flow, and every new         
+        machine, would require setting all of those values again.
         
-    2. Use some fluid flow laws. I remember Bernoulli's principle from University! There was an equasion or maybe two and it was about          flow and velocity - easy. Well, turns out it is not. I realized rather quicly, that I won't get one simple equasion that solves          the problem, cause reality is far more complex. There are many factors that affects fluid flow and it must be considered too.            like viscosity, shape of tank, how water comes out - with a syphon or a hole on the bottom? What are dimensions of pipes? if they        vary somewhere, you need to consider it too. Not easy, definitely. I wasn't sure if an implementation I could provide will work,        even badly so i moved on.     
+    2. Use fluid flow laws. There is no one simple equasion that solves the problem, because reality is more complex and there are many        factors that affects fluid flow, like viscosity, shape of tank, how water comes out - with a syphon or a hole on the bottom? What        are dimensions of pipes? if they vary somewhere, you need to consider it too.
     
     3. Neural Nework - just make a lot of labeled training data and let the NN figure out the rest. 
        Artificial Neural Networks (ANNs) are used for this task and performs well. 
