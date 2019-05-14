@@ -18,9 +18,9 @@ class WaterLevel:
     
     def state(self):
         self.gp.output(self.pin_out, gp.HIGH)
-        time.sleep(0.2)
+        time.sleep(1)
         input_state = self.gp.input(self.pin_in)
-        time.sleep(0.1)
+        time.sleep(1)
         self.gp.output(self.pin_out, gp.LOW)
 
         if input_state == 1:

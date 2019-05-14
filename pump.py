@@ -1,17 +1,18 @@
 import time
-from enum import Enum
-
+from log import Log
 
 class Pump:
     gp = None
     pin = None
+    id = None
 
     WORKING = 1
     NOT_WORKING = 0
 
-    def __init__(self, gp, pin):
+    def __init__(self, gp, pin, id):
         self.gp = gp
         self.pin = pin
+        self.id = id
         gp.setup(pin, gp.OUT, initial=gp.HIGH)
 
     def state(self):
@@ -23,13 +24,14 @@ class Pump:
             return self.NOT_WORKING
 
     def turn_on(self):
-        print('turning on')
+        print('turning on pump ' + str(self.id))
+        Log.append(('turning on pump ' + str(self.id), Log.working_log_file_path)
         # if self.pin is not None and not self.is_working:
         self.gp.output(self.pin, 0)
 
     def turn_off(self):
-        print('turning off')
-        # if self.pin is not None:# and self.is_working:
+        print('turning off pump ' + str(self.id))
+        Log.append(('turning off pump ' + str(self.id), Log.working_log_file_path)        # if self.pin is not None:# and self.is_working:
         self.gp.output(self.pin, 1)
 
     def turn_on_for_time(self, seconds):

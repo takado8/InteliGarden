@@ -16,13 +16,13 @@ class State:
             pickle.dump(state_obj, f, pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
-    def load_state_from_file(water_tank_max_capacity):
+    def load_state_from_file():
         if os.path.isfile(State.state_file_path):
             with open(State.state_file_path, 'rb') as f:
                 return pickle.load(f)
         else:  # init state dict and file
             state_dict = {
-                'water_level': water_tank_max_capacity,    # water volume in tank, in mililiters
+                'water_level': None,    # water volume in tank, in mililiters
                 'low_water_level_alert': False,
                 'water_reserve_state': None,  # if water level is LOW, this is more precise than general water_level
                 'dry_alert_1': None,          # for how many sec dry alert is on
