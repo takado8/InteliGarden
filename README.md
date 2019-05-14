@@ -28,7 +28,10 @@ List of challenges and problems I've met, with solutions I've provided.
    With small water tank, about 1L, volume of two next measurmets varies about 15 - 20ml, from targeted 50ml.
    
    solutions considered:
-    1. Determine few more values of the time needed to pump the intended volume of liquid, but at given high.     
+   
+    1. Determine more values of the time needed to pump the intended volume of liquid, but at given high.
+        well, that is just ugly. It should work somehow, but it requires to determine all those values experimentally, by pouring               water and counting flow time for given volume. It may be acceptable with small tanks, and for one project only, cause every             change in project that affects water flow, would require setting all of those values again. And every new machine.
+        
     2. Use some fluid flow laws. I remember Bernoulli's principle from University! There was an equasion or maybe two and it was about          flow and velocity - easy. Well, no. I realized rather quicly, that I wont get one simple equasion that solves the problem, cause
        reality is far more complex, and there are other factors that needs to be considered too, like viscosity, shape of tank, 
        how water comes out - with a syphon or a hole on the bottom? What are dimensions of pipes? if they vary somewhere, you need              to consider it too. Not easy, definitely. I wasn't sure if an implementation I could provide will work, even badly so i moved on.     3. Neural Nework    
