@@ -1,5 +1,6 @@
 import os
 import datetime
+from ftp import Ftp
 
 class Log:
 
@@ -18,6 +19,9 @@ class Log:
             file = open(Log.log_file_path, 'w+')
         file.write(msg)    
         file.close()
+        Ftp.upload_file(Log.log_file_path, 'log.txt')
+
+
 
 
   

@@ -1,0 +1,1 @@
+{"tank_capacity": 600, "pump_1_water_amount": 50, "tank_refilled": false, "last_rain": null, "low_water_level_alert": false, "pump_2_water_amount": 50, "pump_1_interval": 180, "water_reserve_state": null, "last_loop_time": null, "pump_2_interval": 120, "dry_alert_1": null, "pump_1_last_watering": null, "pump_2_last_watering": null, "water_level": 600, "dry_alert_2": null}

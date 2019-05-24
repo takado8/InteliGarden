@@ -24,24 +24,25 @@ class Pump:
             return self.NOT_WORKING
 
     def turn_on(self):
-        print('turning on pump ' + str(self.id))
-        Log.append(('turning on pump ' + str(self.id), Log.working_log_file_path)
+        Log.append('Turning on pump... ' + str(self.id))
         # if self.pin is not None and not self.is_working:
         self.gp.output(self.pin, 0)
+        Log.append('...turned on')
 
     def turn_off(self):
-        print('turning off pump ' + str(self.id))
-        Log.append(('turning off pump ' + str(self.id), Log.working_log_file_path)        # if self.pin is not None:# and self.is_working:
+        Log.append('Turning off pump ' + str(self.id))
         self.gp.output(self.pin, 1)
+        Log.append('...turned off')
 
     def turn_on_for_time(self, seconds):
         self.turn_on()
         time.sleep(seconds)
         self.turn_off()
 
-    def pump_ml(self, mililiters):
-        # 100ml pumps for 33 sec
-        time_needed = (mililiters * 33) / 100
+    def pump_ml(self, mililiters, water_level):
+        # 100ml pumps in 17 sec from 600ml
+        tank_max = 600
+        time_needed = (mililiters * (16 + ((tank_max - water_level) / 100))) / 100
         self.turn_on()
         time.sleep(time_needed)
         self.turn_off()

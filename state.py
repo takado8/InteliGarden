@@ -1,29 +1,54 @@
 import os
-import pickle
-
-
+import json
+import time
+from ftp import Ftp
+from log import Log
 
 class State:
-    state_file_path = os.path.join(os.path.dirname(__file__), 'data','state.pkl')
+    state_file_path = os.path.join(os.path.dirname(__file__), 'data','state.json')
+    state_server_file_path = os.path.join(os.path.dirname(__file__), 'data','state_server.json')
 
     @staticmethod
-    def sync_local_and_server_state():
-        pass
+    def sync():
+        Ftp.download_file(State.state_server_file_path, 'state.json')
+        time.sleep(1)
+        server_state = State.load_state_from_server_file()
+        local_state = State.load_state_from_file()
+        local_state['pump_1_interval'] = server_state['pump_1_interval']
+        local_state['pump_2_interval'] = server_state['pump_2_interval']
+        local_state['pump_1_water_amount'] = server_state['pump_1_water_amount']
+        local_state['pump_2_water_amount'] = server_state['pump_2_water_amount']
+        if server_state['tank_refilled'] == True: # tank refilled
+            local_state['water_level'] = server_state['tank_capacity']
+            local_state['tank_refilled'] = False
+        State.save_state_to_file(local_state)
+        Ftp.upload_file(State.state_file_path, 'state.json')
+        time.sleep(1)
+        Log.append('state sync.')
+        
+    
+    @staticmethod
+    def load_state_from_server_file():
+        if os.path.isfile(State.state_server_file_path):
+            with open(State.state_server_file_path) as json_file:  
+                return json.load(json_file)
 
     @staticmethod
     def save_state_to_file(state_obj):
-        with open(State.state_file_path, 'wb') as f:
-            pickle.dump(state_obj, f, pickle.HIGHEST_PROTOCOL)
+        with open(State.state_file_path, 'w') as fp:
+            json.dump(state_obj, fp)
 
     @staticmethod
     def load_state_from_file():
         if os.path.isfile(State.state_file_path):
-            with open(State.state_file_path, 'rb') as f:
-                return pickle.load(f)
+            with open(State.state_file_path) as json_file:  
+                return json.load(json_file)
         else:  # init state dict and file
             state_dict = {
                 'water_level': None,    # water volume in tank, in mililiters
-                'low_water_level_alert': False,
+                'tank_capacity': None, # water tank max capacity
+                'tank_refilled': False, # water tank has been refilled
+                'low_water_level_alert': False, # tank water level sensor input
                 'water_reserve_state': None,  # if water level is LOW, this is more precise than general water_level
                 'dry_alert_1': None,          # for how many sec dry alert is on
                 'dry_alert_2': None,          
