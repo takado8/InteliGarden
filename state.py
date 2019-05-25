@@ -18,9 +18,9 @@ class State:
         local_state['pump_2_interval'] = server_state['pump_2_interval']
         local_state['pump_1_water_amount'] = server_state['pump_1_water_amount']
         local_state['pump_2_water_amount'] = server_state['pump_2_water_amount']
-        if server_state['tank_refilled'] == True: # tank refilled
+        if server_state['tank_refilled'] == 1: # tank refilled
             local_state['water_level'] = server_state['tank_capacity']
-            local_state['tank_refilled'] = False
+            local_state['tank_refilled'] = 0
         State.save_state_to_file(local_state)
         Ftp.upload_file(State.state_file_path, 'state.json')
         time.sleep(1)
@@ -47,8 +47,8 @@ class State:
             state_dict = {
                 'water_level': None,    # water volume in tank, in mililiters
                 'tank_capacity': None, # water tank max capacity
-                'tank_refilled': False, # water tank has been refilled
-                'low_water_level_alert': False, # tank water level sensor input
+                'tank_refilled': None, # water tank has been refilled; 0 or 1
+                'low_water_level_alert': None, # tank water level sensor input; 0 or 1
                 'water_reserve_state': None,  # if water level is LOW, this is more precise than general water_level
                 'dry_alert_1': None,          # for how many sec dry alert is on
                 'dry_alert_2': None,          
