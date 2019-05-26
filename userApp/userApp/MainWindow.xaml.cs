@@ -17,9 +17,8 @@ using System.Windows.Shapes;
 
 namespace userApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    /// Background="#afd275"
+    /// 
     public partial class MainWindow : Window
     {
         ftp _ftp;

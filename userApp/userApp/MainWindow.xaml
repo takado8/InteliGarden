@@ -6,45 +6,46 @@
         xmlns:local="clr-namespace:userApp"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
-        Background="#474b4f"
+        Background="#222222"
         Title="MainWindow" Height="611" Width="1114">
-    <Grid Margin="0,0,9.333,6.667">
-        <Border BorderBrush="Silver" Background="#31708e" BorderThickness="1.5" CornerRadius="20" HorizontalAlignment="Left" Height="312" Margin="46,56,0,0" VerticalAlignment="Top" Width="311">
-        </Border>
-        <TextBox x:Name="interval_1_tb" TextChanged="Interval_1_tb_TextChanged" HorizontalAlignment="Left" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="204,79,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#444444" VerticalAlignment="Top" Width="39"/>
+    <Grid Margin="0,0,-0.667,6.333">
 
-        <Label Content="Częstotliwość :" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="129" RenderTransformOrigin="0.64,0.609" Margin="65,78,0,0"/>
+        <Image Source="resources/green.jpg" Stretch="Fill" Height="578" Margin="1,2,0,-5" VerticalAlignment="Top" HorizontalAlignment="Left" Width="1106"/>
 
-        <Label x:Name="zone_lbl" Content="Strefa 1" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" Margin="66,26,0,0" VerticalAlignment="Top" Width="99" RenderTransformOrigin="0.64,0.609"/>
-        <Border BorderBrush="Silver" Background="#8fc1e3" BorderThickness="1.5" CornerRadius="20" HorizontalAlignment="Left" Height="265" Margin="767,108,0,0" VerticalAlignment="Top" Width="279">
-        </Border>
-        <Button Content="Uzupełniono" Background="#d7d9db" Cursor="Hand" Foreground="#333333" FontFamily="Trebuchet MS" FontSize="18" HorizontalAlignment="Left" Height="36" Margin="836,300,0,0" VerticalAlignment="Top" Width="140"/>
+        <Border BorderBrush="#8684a5" Background="#A8A6D7" BorderThickness="2" CornerRadius="20" HorizontalAlignment="Left" Height="312" Margin="46,56,0,0" VerticalAlignment="Top" Width="311"/>
+        <TextBox x:Name="interval_1_tb" TextChanged="Interval_1_tb_TextChanged" HorizontalAlignment="Left" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" Height="33" Margin="204,79,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#3A3863" VerticalAlignment="Top" Width="39"/>
 
-        <Label Content="Poziom wody: NaN" x:Name="water_level_lbl" FontFamily="Trebuchet MS" FontSize="18" Foreground="DimGray" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="209" RenderTransformOrigin="0.354,0.599" Margin="789,138,0,0"/>
+        <Label Content="Częstotliwość :" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="129" RenderTransformOrigin="0.64,0.609" Margin="65,78,0,0"/>
 
-        <Label Content="Zbiornik wody" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" Margin="781,77,0,0" VerticalAlignment="Top" Width="145" RenderTransformOrigin="0.64,0.609"/>
-        <Label Content="Pojemność max:" FontFamily="Trebuchet MS" FontSize="18" Foreground="DimGray" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.48,0.578" Margin="791,195,0,0"/>
-        <Label Content="Ilość wody :" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="200" RenderTransformOrigin="0.64,0.609" Margin="65,126,0,0"/>
-        <Label Content="Ostatnie podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="233" RenderTransformOrigin="0.64,0.609" Margin="66,191,0,0"/>
-        <Label Content="Następne podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="66,225,0,0"/>
-        <Label Content="dni." Cursor="Hand" x:Name="lbl_days_1" MouseDown="Lbl_days_1_MouseDown" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="249,78,0,0"/>
-        <TextBox HorizontalAlignment="Left" x:Name="water_amount_1_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="174,127,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#444444" VerticalAlignment="Top" Width="50"/>
-        <Label Content="ml." FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="230,126,0,0"/>
-        <TextBox HorizontalAlignment="Left" x:Name="tank_max_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="936,195,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#444444" VerticalAlignment="Top" Width="39"/>
-        <Label Content="Czujnik wilgotności : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="67,259,0,0"/>
-        <Label Content="litrów." FontFamily="Trebuchet MS" FontSize="18" Foreground="DimGray" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.64,0.609" Margin="980,195,0,0"/>
-        <Border BorderBrush="Silver" Background="#5085a5" BorderThickness="1.5" CornerRadius="20" HorizontalAlignment="Left" Height="312" Margin="399,193,0,0" VerticalAlignment="Top" Width="311"/>
-        <TextBox HorizontalAlignment="Left" x:Name="interval_2_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="561,217,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#444444" VerticalAlignment="Top" Width="39"/>
-        <Label Content="Częstotliwość :" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="129" RenderTransformOrigin="0.64,0.609" Margin="422,216,0,0"/>
-        <Label x:Name="zone_lbl_Copy" Content="Strefa 2" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" Margin="423,164,0,0" VerticalAlignment="Top" Width="99" RenderTransformOrigin="0.64,0.609"/>
-        <Label Content="Ilość wody :" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="106" RenderTransformOrigin="0.64,0.609" Margin="422,264,0,0"/>
-        <Label Content="Ostatnie podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="233" RenderTransformOrigin="0.64,0.609" Margin="422,332,0,0"/>
-        <Label Content="Następne podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="422,366,0,0"/>
-        <Label Content="dni." FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="606,216,0,0"/>
-        <TextBox HorizontalAlignment="Left" x:Name="water_amount_2_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="536,265,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#444444" VerticalAlignment="Top" Width="50"/>
-        <Label Content="ml." FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="596,264,0,0"/>
-        <Label Content="Czujnik wilgotności : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="423,400,0,0"/>
-        <Label Content="litrów." FontFamily="Trebuchet MS" FontSize="18" Foreground="DimGray" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.64,0.609" Margin="944,137,0,0"/>
+        <Label x:Name="zone_lbl" Content="Strefa 1" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" Margin="66,26,0,0" VerticalAlignment="Top" Width="99" RenderTransformOrigin="0.64,0.609"/>
+        <Border BorderBrush="Silver" Background="#4D8A88" BorderThickness="1.5" CornerRadius="20" HorizontalAlignment="Left" Height="265" Margin="767,108,0,0" VerticalAlignment="Top" Width="279"/>
+        <Button Content="Uzupełniono" Background="#133432" Cursor="Hand" Foreground="#E8F2D9" FontFamily="Trebuchet MS" FontSize="18" HorizontalAlignment="Left" Height="36" Margin="836,300,0,0" VerticalAlignment="Top" Width="140"/>
+
+        <Label Content="Poziom wody: NaN" x:Name="water_level_lbl" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="209" RenderTransformOrigin="0.354,0.599" Margin="789,138,0,0"/>
+
+        <Label Content="Zbiornik wody" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" Margin="781,77,0,0" VerticalAlignment="Top" Width="145" RenderTransformOrigin="0.64,0.609"/>
+        <Label Content="Pojemność max:" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="142" RenderTransformOrigin="0.48,0.578" Margin="791,195,0,0"/>
+        <Label Content="Ilość wody :" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="200" RenderTransformOrigin="0.64,0.609" Margin="65,126,0,0"/>
+        <Label Content="Ostatnie podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="233" RenderTransformOrigin="0.64,0.609" Margin="66,191,0,0"/>
+        <Label Content="Następne podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="66,225,0,0"/>
+        <Label Content="dni." Cursor="Hand" x:Name="lbl_days_1" MouseDown="Lbl_days_1_MouseDown" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="249,78,0,0"/>
+        <TextBox HorizontalAlignment="Left" x:Name="water_amount_1_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" Height="33" Margin="174,127,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#3A3863" VerticalAlignment="Top" Width="50"/>
+        <Label Content="ml." FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="230,126,0,0"/>
+        <TextBox HorizontalAlignment="Left" x:Name="tank_max_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="936,195,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#133432" VerticalAlignment="Top" Width="39"/>
+        <Label Content="Czujnik wilgotności : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="67,259,0,0"/>
+        <Label Content="litrów." FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.64,0.609" Margin="980,195,0,0"/>
+        <Border BorderBrush="Silver" Background="#E4DE60" BorderThickness="1.5" CornerRadius="20" HorizontalAlignment="Left" Height="312" Margin="399,193,0,0" VerticalAlignment="Top" Width="311"/>
+        <TextBox HorizontalAlignment="Left" x:Name="interval_2_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="561,217,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#836C00" VerticalAlignment="Top" Width="39"/>
+        <Label Content="Częstotliwość :" FontFamily="Trebuchet MS" FontSize="18" Foreground="#a4b095" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="129" RenderTransformOrigin="0.64,0.609" Margin="422,216,0,0"/>
+        <Label x:Name="zone_lbl_Copy" Content="Strefa 2" FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" Margin="423,164,0,0" VerticalAlignment="Top" Width="99" RenderTransformOrigin="0.64,0.609"/>
+        <Label Content="Ilość wody :" FontFamily="Trebuchet MS" FontSize="18" Foreground="#a4b095" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="106" RenderTransformOrigin="0.64,0.609" Margin="422,264,0,0"/>
+        <Label Content="Ostatnie podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="#a4b095" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="233" RenderTransformOrigin="0.64,0.609" Margin="422,332,0,0"/>
+        <Label Content="Następne podlewanie : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="#a4b095" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="422,366,0,0"/>
+        <Label Content="dni." FontFamily="Trebuchet MS" FontSize="18" Foreground="#a4b095" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="606,216,0,0"/>
+        <TextBox HorizontalAlignment="Left" x:Name="water_amount_2_tb" FontFamily="Trebuchet MS" FontSize="18" Foreground="Silver" Height="33" Margin="536,265,0,0" TextWrapping="Wrap" Text="N" TextAlignment="Center" VerticalContentAlignment="Center" Background="#836C00" VerticalAlignment="Top" Width="50"/>
+        <Label Content="ml." FontFamily="Trebuchet MS" FontSize="18" Foreground="#a4b095" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="52" RenderTransformOrigin="0.64,0.609" Margin="596,264,0,0"/>
+        <Label Content="Czujnik wilgotności : None" FontFamily="Trebuchet MS" FontSize="18" Foreground="#a4b095" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="243" RenderTransformOrigin="0.64,0.609" Margin="423,400,0,0"/>
+        <Label Content="litrów." FontFamily="Trebuchet MS" FontSize="18" Foreground="#E8F2D9" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.64,0.609" Margin="944,137,0,0"/>
 
     </Grid>
 </Window>
