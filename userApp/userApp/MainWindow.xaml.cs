@@ -39,7 +39,7 @@ namespace userApp
 
             state = JsonConvert.DeserializeObject<Dictionary<string, string>>(file);
 
-            if (state["pump_1_interval"] != null) interval_1_tb.Text = state["pump_1_interval"];     
+            if (state["pump_1_interval"] != null) interval_1_tb.Text = (float.Parse(state["pump_1_interval"]) / 86400).ToString();
             if (state["pump_2_interval"] != null) interval_2_tb.Text = state["pump_2_interval"];
             if (state["pump_1_water_amount"] != null) water_amount_1_tb.Text = state["pump_1_water_amount"];
             if (state["pump_2_water_amount"] != null) water_amount_2_tb.Text = state["pump_2_water_amount"];
@@ -52,34 +52,34 @@ namespace userApp
         {
             if (state != null && interval_1_tb.Text != "" && state["pump_1_interval"] != interval_1_tb.Text)
             {
-                string value;
-                if(lbl_days_1.Content.ToString() == "dni.")
+                var interval = interval_1_tb.Text.ToString();
+                string content = validate_input(interval);
+                if (content != "")
                 {
-                    float val = float.Parse(interval_1_tb.Text) * 86400;  // days for seconds
-                    value = val.ToString();
+                    state["pump_1_interval"] = (int.Parse(content) * 86400).ToString();
+                    string serialized = JsonConvert.SerializeObject(state);
+                    File.WriteAllText(path + "/state.json", serialized);
                 }
-                else
-                {
-                    value = interval_1_tb.Text;
-                }
-                state["pump_1_interval"] = value;
-                string serialized = JsonConvert.SerializeObject(state);
-                File.WriteAllText(path + "/state.json", serialized);
+                interval_1_tb.Text = content;
             }
+        }
+
+        string validate_input(string input)
+        {
+            string content = "";
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] <= '9' && input[i] >= '0')
+                {
+                    content += input[i];
+                }
+            }
+            return content;
         }
 
         private void Lbl_days_1_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (lbl_days_1.Content.ToString() == "dni.")
-            {
-                lbl_days_1.Content = "sek.";
-                interval_1_tb.Text = (float.Parse(interval_1_tb.Text) * 86400).ToString();
-            }
-            else
-            {
-                lbl_days_1.Content = "dni.";
-                interval_1_tb.Text = (float.Parse(interval_1_tb.Text) / 86400).ToString();
-            }
+
         }
     }
 }
