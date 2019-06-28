@@ -18,8 +18,9 @@ class State:
         local_state['pump_2_interval'] = server_state['pump_2_interval']
         local_state['pump_1_water_amount'] = server_state['pump_1_water_amount']
         local_state['pump_2_water_amount'] = server_state['pump_2_water_amount']
+        local_state['tank_capacity'] = server_state['tank_capacity']
         if server_state['tank_refilled'] == 1: # tank refilled
-            local_state['water_level'] = server_state['tank_capacity']
+            local_state['water_level'] = local_state['tank_capacity']
             local_state['tank_refilled'] = 0
         State.save_state_to_file(local_state)
         Ftp.upload_file(State.state_file_path, 'state.json')

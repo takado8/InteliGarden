@@ -24,8 +24,8 @@ class Control:
     rain_sensor = None
     # water level sensor
     water_level_sensor = None
-    WATER_TANK_MAX_CAPACITY = 600 # ml
-    WATER_RESERVE_CAPACITY = 100 # ml
+    WATER_TANK_MAX_CAPACITY = 30000 # ml
+    WATER_RESERVE_CAPACITY = 5000 # ml
     # pins
     PUMP_1_pin = 17
     PUMP_2_pin = 27
@@ -54,15 +54,14 @@ class Control:
     def __del__(self):
         # An app should never be closed, so if it does, it means something crashed probably. Add to error log, send user a warning
         # and restart app
-        
+        Log.append('destructor.')
         print('Cleanup on end.')
         gp.cleanup()
 
     def tank_refilled(self):
         Log.append('Tank refilled.')
-        self.state['low_water_level_alert'] = False
-        self.state['water_reserve_state'] = None
-        self.state['water_level'] = self.WATER_TANK_MAX_CAPACITY   #  tank is always refilled fully.
+        self.state['low_water_level_alert'] = 0
+        self.state['water_level'] = self.state['tank_capacity']   #  tank is always refilled fully.
         State.save_state_to_file(self.state)
 
     def set_interval(self, pump_nr, time_sec):
@@ -86,74 +85,61 @@ class Control:
         if self.state['pump_1_interval'] is None:   ## later --> or self.state['pump_2_interval']
             Log.append('pump 1 interval is None.')
             return
-            #self.state['pump_1_interval'] = 432000  # 5 days
         
         if self.state['pump_1_water_amount'] is None:
             Log.append('pump 1 water amount is None.')
             return
-            #self.state['pump_1_water_amount'] = 50  # ml
 
         while True:
-            
             if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] >= self.STEP_TIME: # perform step
                 Log.append('***** New Loop *****')
-                # check water level 
-                if self.water_level_sensor.state == WaterLevel.LOW:
-                    self.state['low_water_level_alert'] = True
-                    if self.state['water_reserve_state'] is None:
-                        Log.append('Low water level reached.' )
-                        self.state['water_reserve_state'] = self.WATER_RESERVE_CAPACITY
-                else:
-                    if self.state['low_water_level_alert'] == True:  # if alert was True, and now is not, refill happend
-                        self.tank_refilled()
                 
                 # #
                 # rain sensor check
                 # if there was a rain, and moisture sensor state == WET - skip this watering cycle, but when moisture sensor show state==DRY
                 # water right away. But this will affect whole schedule, so correction will be needed. It would be good to find out how
                 # long and intense rain was. Also, temperature difference on non-raing days may vary a lot, if there was scoarching for last
-                # few days, an earlier watering may be needed. Light sensor could do the trick.
+                # few days, an earlier watering might be needed. Light sensor could do the trick.
                 # #
 
                 # moisture sensors check
                 m1_state = self.m_sensor_1.state()
                 if m1_state == MSensor.DRY:
-                    if self.state['dry_alert_1'] == None:
+                    if self.state['dry_alert_1'] == 0:
                         self.state['dry_alert_1'] = time.time()
                         Log.append('Moisturness sensor 1 is dry.')
                     else:
                         dry_time = time.time() - self.state['dry_alert_1']
-                        if dry_time > 60 * 3:  # 3 min
-                            Log.append('Moisturness sensor 1 is dry for 3 mins now.')
-                            # emergency watering, alert for user etc.
+                        # if dry_time > 60 * 3:  # 3 min
+                        #     Log.append('Moisturness sensor 1 is dry for 3 mins now.')
+                        #     # emergency watering, alert for user etc.
                 else:
-                    if self.state['dry_alert_1'] is not None:
+                    if self.state['dry_alert_1'] != 0:
                         Log.append('Moisturness sensor 1 is wet again.')
-                        self.state['dry_alert_1'] = None
+                        self.state['dry_alert_1'] = 0
                 
                 # check if watering is scheduled 
                 # PUMP_1
                 if self.state['pump_1_last_watering'] is None or time.time() - self.state['pump_1_last_watering'] >= self.state['pump_1_interval']:
                     # watering is needed
                     Log.append('Pump 1 watering is required.')
-                    if self.state['low_water_level_alert'] == True:
+                    if self.state['low_water_level_alert'] == 1:
                         # send warning to user APK
                         Log.append("Low water level in main tank.")    
-                        if self.state['water_reserve_state'] < self.state['pump_1_water_amount'] + 50:
+                        if self.state['water_level'] < self.state['pump_1_water_amount']:
                             # if no water, don't run pumps.
-                            Log.append("Water tank is empty. Skipping watering.")       
+                            Log.append("Water tank is empty. Skipping watering.")
                             # send alert to user APK    
                         else:
                             # run pump
                             if self.pump_1.pump_ml(self.state['pump_1_water_amount']):
-                                self.state['water_reserve_state'] -= self.state['pump_1_water_amount']
                                 self.state['water_level'] -= self.state['pump_1_water_amount']
                                 self.state['pump_1_last_watering'] = time.time()
-                                Log.append('Pump 1 pumped ' + str(self.state['pump_1_water_amount']) + ' ml. ' + str(self.state['water_level']) +'ml left in tank.')
+                                Log.append('Pump 1 pumped ' + str(self.state['pump_1_water_amount']) + ' ml. ' + str(self.state['water_level']) +' ml left in tank.')
                             else:
                                 # write to error log
                                 Log.append('Pump 1 watering error.')
-                    else:
+                    else: # no water level alert
                         # run pump
                         if self.pump_1.pump_ml(self.state['pump_1_water_amount']):
                             self.state['water_level'] -= self.state['pump_1_water_amount']
@@ -163,7 +149,16 @@ class Control:
                         else:
                             # write to an error log
                             Log.append('Pump 1 watering error.')
-
+                
+                # check water level
+                if self.water_level_sensor.state() == WaterLevel.LOW:
+                    if self.state['low_water_level_alert'] == 0:
+                        Log.append('Low water level reached.' )
+                        self.state['low_water_level_alert'] = 1
+                        self.state['water_level'] = self.WATER_RESERVE_CAPACITY
+                else:
+                    if self.state['low_water_level_alert'] == 1:
+                        self.tank_refilled()    # if alert was 1, and now is 0, tank was refilled.
                 # #
                 # same for PUMP_2 
                 # #
@@ -172,3 +167,5 @@ class Control:
                 #if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] > self.step_delay_time + 60:
                 self.state['last_loop_time'] = time.time()
                 State.save_state_to_file(self.state)
+            else:
+                time.sleep(10)
