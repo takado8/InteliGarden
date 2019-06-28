@@ -22,6 +22,8 @@ class State:
         if server_state['tank_refilled'] == 1: # tank refilled
             local_state['water_level'] = local_state['tank_capacity']
             local_state['tank_refilled'] = 0
+            local_state['low_water_level_alert'] = 0
+            Log.append('tank refilled')
         State.save_state_to_file(local_state)
         Ftp.upload_file(State.state_file_path, 'state.json')
         time.sleep(1)
