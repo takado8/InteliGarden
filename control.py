@@ -24,7 +24,6 @@ class Control:
     rain_sensor = None
     # water level sensor
     water_level_sensor = None
-    WATER_TANK_MAX_CAPACITY = 30000 # ml
     WATER_RESERVE_CAPACITY = 5000 # ml
     # pins
     PUMP_1_pin = 17
@@ -52,9 +51,6 @@ class Control:
         self.water_level_sensor = WaterLevel(gp, self.WATER_LEVEL_SENSOR_pin_out, self.WATER_LEVEL_SENSOR_pin_in)
        
     def __del__(self):
-        # An app should never be closed, so if it does, it means something crashed probably. Add to error log, send user a warning
-        # and restart app
-        Log.append('destructor.')
         print('Cleanup on end.')
         gp.cleanup()
 
@@ -62,18 +58,6 @@ class Control:
         Log.append('Tank refilled.')
         self.state['low_water_level_alert'] = 0
         self.state['water_level'] = self.state['tank_capacity']   #  tank is always refilled fully.
-        State.save_state_to_file(self.state)
-
-    def set_interval(self, pump_nr, time_sec):
-        Log.append('Setting group ' + str(pump_nr) + ' interval for ' + str(time_sec) + 'seconds.')
-        pump_x_interval = 'pump_' + str(pump_nr) + '_interval'
-        self.state[pump_x_interval] = time_sec
-        State.save_state_to_file(self.state)
-    
-    def set_amount(self, pump_nr, volume):
-        Log.append('Setting group ' + str(pump_nr) + ' watering volume for ' + str(volume) + 'ml.')
-        pump_x_water_amount = 'pump_' + str(pump_nr) + '_water_amount'
-        self.state[pump_x_water_amount] = volume
         State.save_state_to_file(self.state)
 
     def pumped(self, pump_nr):
@@ -104,8 +88,10 @@ class Control:
 
         while True:
             if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] >= self.STEP_TIME: # perform step
-                Log.append('***** New Loop *****')
+                Log.append('--------------- New Loop ----------------')
                 
+                State.sync()
+                self.state = State.load_state_from_file()
                 # #
                 # rain sensor check
                 # if it was raining and moisture sensor state == WET - skip this watering cycle, but when moisture sensor show state==DRY
@@ -149,14 +135,14 @@ class Control:
                         else:
                             # run pump
                             if self.pump_1.pump_ml(self.state['pump_1_water_amount']):
-                                self.pumped()
+                                self.pumped(pump_nr=1)
                             else:
                                 # write to error log
                                 Log.append('Pump 1 watering error.')
                     else: # no water level alert
                         # run pump
                         if self.pump_1.pump_ml(self.state['pump_1_water_amount']):
-                            self.pumped()
+                            self.pumped(pump_nr=1)
                         else:
                             # write to an error log
                             Log.append('Pump 1 watering error.')
@@ -180,5 +166,6 @@ class Control:
                 #if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] > self.step_delay_time + 60:
                 self.state['last_loop_time'] = time.time()
                 State.save_state_to_file(self.state)
+                Log.append('-------------- End of loop --------------')
             else:
                 time.sleep(10)

@@ -16,7 +16,6 @@ class Ftp:
             with open(file_path, 'rb') as f:  
                 ftp.storbinary('STOR ' + ftp_file_name, f)
             ftp.quit()
-            print('file uploaded.')
         else:
             print('file not found.')
         
@@ -27,4 +26,4 @@ class Ftp:
         file = open(file_path, 'wb+')
         ftp.retrbinary("RETR " + ftp_file_name, file.write)
         ftp.quit()
-        print('file downloaded.')
+        #print('file downloaded.')

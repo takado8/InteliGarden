@@ -39,10 +39,10 @@ class Pump:
         time.sleep(seconds)
         self.turn_off()
 
-    def pump_ml(self, mililiters, water_level):
+    def pump_ml(self, mililiters):
         # 100ml pumps in 17 sec from 600ml
-        tank_max = 600
-        time_needed = (mililiters * (16 + ((tank_max - water_level) / 100))) / 100
+       # tank_max = 600
+        time_needed = 5
         self.turn_on()
         time.sleep(time_needed)
         self.turn_off()
