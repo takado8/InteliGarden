@@ -30,7 +30,7 @@ class Pump:
         Log.append('...turned on')
 
     def turn_off(self):
-        Log.append('Turning off pump ' + str(self.id))
+        Log.append('Turning off pump... ' + str(self.id))
         self.gp.output(self.pin, 1)
         Log.append('...turned off')
 

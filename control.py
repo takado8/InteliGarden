@@ -41,6 +41,7 @@ class Control:
         gp.setmode(gp.BCM)
         gp.setwarnings(False)
         # read state file
+        State.sync()
         self.state = State.load_state_from_file()
         # init pumps
         self.pump_1 = Pump(gp, self.PUMP_1_pin, id=1)
@@ -166,6 +167,7 @@ class Control:
                 #if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] > self.step_delay_time + 60:
                 self.state['last_loop_time'] = time.time()
                 State.save_state_to_file(self.state)
+                State.sync()
                 Log.append('-------------- End of loop --------------')
             else:
                 time.sleep(10)

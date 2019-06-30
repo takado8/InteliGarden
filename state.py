@@ -35,8 +35,8 @@ class State:
         if os.path.isfile(State.state_server_file_path):
             with open(State.state_server_file_path) as json_file:  
                 state_dict = json.load(json_file)
-                for val in state_dict:
-                    state_dict[val] = float(state_dict[val])
+                # for val in state_dict:
+                #     state_dict[val] = float(state_dict[val])
                 return state_dict
 
     @staticmethod
@@ -49,8 +49,8 @@ class State:
         if os.path.isfile(State.state_file_path):
             with open(State.state_file_path) as json_file:  
                 state_dict = json.load(json_file)
-                for val in state_dict:
-                    state_dict[val] = float(state_dict[val])
+                # for val in state_dict:
+                #     state_dict[val] = float(state_dict[val])
                 return state_dict
         else:  # init state dict and file
             state_dict = {
