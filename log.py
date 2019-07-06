@@ -17,7 +17,7 @@ class Log:
             file = open(Log.log_file_path, 'a+')     
         else:
             file = open(Log.log_file_path, 'w+')
-        file.write(msg)    
+        file.write(msg)
         file.close()
         Ftp.upload_file(Log.log_file_path, 'log.txt')
 

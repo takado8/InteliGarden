@@ -11,7 +11,7 @@ class State:
     @staticmethod
     def sync():
         Ftp.download_file(State.state_server_file_path, 'state.json')
-        time.sleep(1)
+        time.sleep(0.5)
         server_state = State.load_state_from_server_file()
         local_state = State.load_state_from_file()
         local_state['pump_1_interval'] = server_state['pump_1_interval']
@@ -24,10 +24,16 @@ class State:
             local_state['tank_refilled'] = 0
             local_state['low_water_level_alert'] = 0
             Log.append('tank refilled')
+        if server_state['run_test'] == 2: # test request
+            if local_state['run_test'] == 0: # request not taken
+                local_state['run_test'] = 2
+            elif local_state['run_test'] == 1: # request satisfied
+                local_state['run_test'] = 0
+
+
         State.save_state_to_file(local_state)
         Ftp.upload_file(State.state_file_path, 'state.json')
-        time.sleep(1)
-        Log.append('state sync.')
+        #Log.append('state sync.')
         
     
     @staticmethod
@@ -67,7 +73,8 @@ class State:
                 'pump_1_water_amount': 0, # water volume that will be pumped on one watering event
                 'pump_2_water_amount': 0,
                 'pump_1_last_watering': 0, # time.time()
-                'pump_2_last_watering': 0
+                'pump_2_last_watering': 0,
+                'run_test': 0
                 }
             # State.save_state_to_file(state_dict)  we call it in control class.
             return state_dict

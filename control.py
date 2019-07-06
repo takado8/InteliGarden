@@ -11,7 +11,7 @@ from log import Log
 class Control:
     # water volume is always expressed in mililiters, any time lenght is in seconds, and time of last event is time.time() seconds
     # call functions in run() every n seconds
-    STEP_TIME = 60     # 7200 s == 2h
+    STEP_TIME = 40     # 7200 s == 2h
     # state
     state =  {}
     # pumps
@@ -24,12 +24,12 @@ class Control:
     rain_sensor = None
     # water level sensor
     water_level_sensor = None
-    WATER_RESERVE_CAPACITY = 5000 # ml
+    WATER_RESERVE_CAPACITY = 4000 # ml
     # pins
     PUMP_1_pin = 17
     PUMP_2_pin = 27
     M_SENSOR_1_pin = 14
-    M_SENSOR_2_pin = None
+    M_SENSOR_2_pin = 8
     M_SENSORS_RELAY_pin = 12
     RAIN_SENSOR_pin = None
     WATER_LEVEL_SENSOR_pin_out = 1
@@ -48,6 +48,7 @@ class Control:
         self.pump_2 = Pump(gp, self.PUMP_2_pin, id=2)
         # moisture sensors
         self.m_sensor_1 = MSensor(gp, self.M_SENSOR_1_pin, self.M_SENSORS_RELAY_pin)
+        self.m_sensor_2 = MSensor(gp, self.M_SENSOR_2_pin, self.M_SENSORS_RELAY_pin)
         # water level sensor
         self.water_level_sensor = WaterLevel(gp, self.WATER_LEVEL_SENSOR_pin_out, self.WATER_LEVEL_SENSOR_pin_in)
        
@@ -66,6 +67,11 @@ class Control:
         self.state['pump_'+str(pump_nr)+'_last_watering'] = time.time()
         Log.append('Pump '+str(pump_nr)+' pumped ' + str(self.state['pump_'+str(pump_nr)+'_water_amount']) + ' ml. ' +\
              str(self.state['water_level']) +' ml left in tank.')
+
+    def run_test(self):
+        self.pump_1.turn_on_for_time(5)
+        self.state['run_test'] = 1
+        State.save_state_to_file(self.state)
 
     def run(self):
         # check if all necessary variables are assigned in self.state
@@ -89,10 +95,15 @@ class Control:
 
         while True:
             if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] >= self.STEP_TIME: # perform step
-                Log.append('--------------- New Loop ----------------')
+                #Log.append('--------------- New Loop ----------------')
                 
                 State.sync()
                 self.state = State.load_state_from_file()
+
+                # test
+                if self.state['run_test'] == 2:
+                    self.run_test()
+
                 # #
                 # rain sensor check
                 # if it was raining and moisture sensor state == WET - skip this watering cycle, but when moisture sensor show state==DRY
@@ -107,32 +118,51 @@ class Control:
                     if self.state['dry_alert_1'] == 0:
                         self.state['dry_alert_1'] = time.time()
                         Log.append('Moisturness sensor 1 is dry.')
-                    else:
-                        dry_time = time.time() - self.state['dry_alert_1']
-                        # if dry_time > 60 * 3:  # 3 min
-                        #     Log.append('Moisturness sensor 1 is dry for 3 mins now.')
-                        #     # emergency watering, alert for user etc.
+                    # else:
+                    #     dry_time = time.time() - self.state['dry_alert_1']
+                    #     # if dry_time > 60 * 3:  # 3 min
+                    #     #     Log.append('Moisturness sensor 1 is dry for 3 mins now.')
+                    #     #     # emergency watering, alert for user etc.
                 else:
                     if self.state['dry_alert_1'] != 0:
                         Log.append('Moisturness sensor 1 is wet again.')
                         self.state['dry_alert_1'] = 0
                 
+                m2_state = self.m_sensor_2.state()
+                if m2_state == MSensor.DRY:
+                    if self.state['dry_alert_2'] == 0:
+                        self.state['dry_alert_2'] = time.time()
+                        Log.append('Moisturness sensor 2 is dry.')
+                    # else:
+                    #     dry_time = time.time() - self.state['dry_alert_2']
+                    #     # if dry_time > 60 * 3:  # 3 min
+                    #     #     Log.append('Moisturness sensor 2 is dry for 3 mins now.')
+                    #     #     # emergency watering, alert for user etc.
+                else:
+                    if self.state['dry_alert_2'] != 0:
+                        Log.append('Moisturness sensor 2 is wet again.')
+                        self.state['dry_alert_2'] = 0
                 # #
                 # second sensor
                 # #
 
-                # check if watering is scheduled 
+                # check if watering is scheduled
                 # PUMP_1
-                if self.state['pump_1_last_watering'] is None or time.time() - self.state['pump_1_last_watering'] >= self.state['pump_1_interval']:
+                if self.state['pump_1_last_watering'] == 0 or time.time() - self.state['pump_1_last_watering'] >= self.state['pump_1_interval']:
                     # watering is needed
                     Log.append('Pump 1 watering is required.')
                     if self.state['low_water_level_alert'] == 1:
                         # send warning to user APK
                         Log.append("Low water level in main tank.")    
                         if self.state['water_level'] < self.state['pump_1_water_amount']:
-                            # if no water, don't run pumps.
-                            Log.append("Water tank is empty. Skipping watering.")
-                            # send alert to user APK    
+                            if self.state['water_level'] > 100: # pump whatever left
+                                if self.pump_1.pump_ml(self.state['water_level']):
+                                    self.pumped(pump_nr=1)
+                                else:
+                                    Log.append('Pump 1 watering error.')
+                            else:
+                                # if no water, don't run pumps.
+                                Log.append("Water tank is empty. Skipping watering.")
                         else:
                             # run pump
                             if self.pump_1.pump_ml(self.state['pump_1_water_amount']):
@@ -168,6 +198,6 @@ class Control:
                 self.state['last_loop_time'] = time.time()
                 State.save_state_to_file(self.state)
                 State.sync()
-                Log.append('-------------- End of loop --------------')
+                #Log.append('-------------- End of loop --------------')
             else:
                 time.sleep(10)

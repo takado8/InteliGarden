@@ -1,4 +1,5 @@
 import time
+from log import Log
 
 class MSensor:
     sensor_pin = None
@@ -17,12 +18,18 @@ class MSensor:
 
     def state(self):
         # turn on sensor, measure, turn off
-        self.gp.output(self.relay_pin, self.gp.LOW)
-        time.sleep(1)
-        state = self.gp.input(self.sensor_pin)
-        time.sleep(1)
-        self.gp.output(self.relay_pin, self.gp.HIGH)
+        try:
+            self.gp.output(self.relay_pin, self.gp.LOW)
         
+            time.sleep(1)
+            state = self.gp.input(self.sensor_pin)
+            time.sleep(1)
+            self.gp.output(self.relay_pin, self.gp.HIGH)
+            time.sleep(1)
+        except Exception as ex:
+            Log.append('moisture sensore error')
+            Log.append(str(ex))
+            state = 1
         # 0 - over the threshold
         # 1 - below the threshold
         if state == 0:
