@@ -11,13 +11,18 @@ from log import Log
 class Control:
     # water volume is always expressed in mililiters, any time lenght is in seconds, and time of last event is time.time() seconds
     # call functions in run() every n seconds
-    STEP_TIME = 40     # 7200 s == 2h
+    STEP_TIME = 3600     # 1h
+    # check test
+    TEST_STEP_TIME = 20 # 20s
+    last_test_time = 0
     # state
     state =  {}
     # pumps
     pump_1 = None
     pump_2 = None
     # moisture sensors
+    moisture_last_check_time = 0
+    MOISTURE_CHECK_STEP = 43200 # 12h
     m_sensor_1 = None
     m_sensor_2 = None
     # rain sensor
@@ -69,7 +74,8 @@ class Control:
              str(self.state['water_level']) +' ml left in tank.')
 
     def run_test(self):
-        self.pump_1.turn_on_for_time(5)
+        Log.append('Test run.')
+        self.pump_1.turn_on_for_time(4)
         self.state['run_test'] = 1
         State.save_state_to_file(self.state)
 
@@ -94,35 +100,23 @@ class Control:
             return
 
         while True:
-            if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] >= self.STEP_TIME: # perform step
-                #Log.append('--------------- New Loop ----------------')
-                
+            if time.time() - self.last_test_time >= self.TEST_STEP_TIME:
+                # test
                 State.sync()
                 self.state = State.load_state_from_file()
-
-                # test
                 if self.state['run_test'] == 2:
                     self.run_test()
+                State.save_state_to_file(self.state)
+                State.sync()
+                self.last_test_time = time.time()
 
-                # #
-                # rain sensor check
-                # if it was raining and moisture sensor state == WET - skip this watering cycle, but when moisture sensor show state==DRY
-                # water right away. But this will affect whole schedule, so correction will be needed. It would be good to find out how
-                # long and intense rain was. Also, temperature difference on non-raing days may vary a lot, if there was scoarching for last
-                # few days, an earlier watering might be needed. Light sensor could do the trick.
-                # #
-
+            if time.time() - self.moisture_last_check_time >= self.MOISTURE_CHECK_STEP:
                 # moisture sensors check
                 m1_state = self.m_sensor_1.state()
                 if m1_state == MSensor.DRY:
                     if self.state['dry_alert_1'] == 0:
                         self.state['dry_alert_1'] = time.time()
-                        Log.append('Moisturness sensor 1 is dry.')
-                    # else:
-                    #     dry_time = time.time() - self.state['dry_alert_1']
-                    #     # if dry_time > 60 * 3:  # 3 min
-                    #     #     Log.append('Moisturness sensor 1 is dry for 3 mins now.')
-                    #     #     # emergency watering, alert for user etc.
+                        Log.append('Moisturness sensor 1 is dry.')       
                 else:
                     if self.state['dry_alert_1'] != 0:
                         Log.append('Moisturness sensor 1 is wet again.')
@@ -133,18 +127,20 @@ class Control:
                     if self.state['dry_alert_2'] == 0:
                         self.state['dry_alert_2'] = time.time()
                         Log.append('Moisturness sensor 2 is dry.')
-                    # else:
-                    #     dry_time = time.time() - self.state['dry_alert_2']
-                    #     # if dry_time > 60 * 3:  # 3 min
-                    #     #     Log.append('Moisturness sensor 2 is dry for 3 mins now.')
-                    #     #     # emergency watering, alert for user etc.
                 else:
                     if self.state['dry_alert_2'] != 0:
                         Log.append('Moisturness sensor 2 is wet again.')
                         self.state['dry_alert_2'] = 0
-                # #
-                # second sensor
-                # #
+                State.save_state_to_file(self.state)
+                State.sync()
+                self.moisture_last_check_time = time.time()
+
+
+            if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] >= self.STEP_TIME: # perform step
+                #Log.append('--------------- New Loop ----------------')
+                
+                State.sync()
+                self.state = State.load_state_from_file()
 
                 # check if watering is scheduled
                 # PUMP_1
@@ -155,7 +151,7 @@ class Control:
                         # send warning to user APK
                         Log.append("Low water level in main tank.")    
                         if self.state['water_level'] < self.state['pump_1_water_amount']:
-                            if self.state['water_level'] > 100: # pump whatever left
+                            if self.state['water_level'] > 400: # pump whatever is left
                                 if self.pump_1.pump_ml(self.state['water_level']):
                                     self.pumped(pump_nr=1)
                                 else:
@@ -192,12 +188,20 @@ class Control:
                     if self.state['low_water_level_alert'] == 1:
                         self.tank_refilled()    # if alert was 1, and now is 0, tank was refilled.
                
-
                 # on loop end.
-                #if self.state['last_loop_time'] is None or time.time() - self.state['last_loop_time'] > self.step_delay_time + 60:
+                
                 self.state['last_loop_time'] = time.time()
                 State.save_state_to_file(self.state)
                 State.sync()
                 #Log.append('-------------- End of loop --------------')
             else:
                 time.sleep(10)
+
+
+if __name__ == '__main__':
+    if os.path.isfile(os.path.join(os.path.dirname(__file__), 'data','autorun')):
+        Log.append('Autorun enabled.')
+        c = Control()
+        c.run()
+    else:
+        Log.append('Autorun disabled.')

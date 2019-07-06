@@ -45,11 +45,11 @@ class Pump:
         self.turn_off()
 
     def pump_ml(self, mililiters):
-        # 100ml  23s full, 24s half, 25s low
-        time_needed = 22
-        loops = round(mililiters / 100, None)
+        # 400 ml / 64s  FULL
+        time_needed = 64
+        loops = round(mililiters / 400, None)
         for i in range(loops):
             self.turn_on_for_time(time_needed)
             print(str(i+1) + '/' + str(loops))
-            time.sleep(10)
+            time.sleep(120)
         return True
