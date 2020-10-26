@@ -1,6 +1,6 @@
 # InteliGarden
 
-Autonomous plant watering machine, based on Rasberry Pi Zero, with an aplication for android, iOS and windows 10, wchich allows to easly manage InteliGarden. 
+Autonomous plant watering machine, based on Raspberry Pi Zero, with a windows application for managing it.
 
 Solution consists of following parts:
 
@@ -11,3 +11,7 @@ Solution consists of following parts:
 5. Rain sensor.
 6. Three power relays.
 7. Wiring, piping, power supply.
+
+![img](/data/inteligarden.png)
+
+
