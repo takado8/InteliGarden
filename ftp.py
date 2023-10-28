@@ -3,9 +3,9 @@ import os
 
 
 class Ftp:
-    HOST_NAME = 'serwer1868028.home.pl'
-    USER = 'inteligarden01@serwer1868028.home.pl'
-    PASS = 'sgHR5$6yUO12jqQ3'
+    HOST_NAME = ''
+    USER = ''
+    PASS = ''
 
     @staticmethod
     def upload_file(file_path, ftp_file_name):
